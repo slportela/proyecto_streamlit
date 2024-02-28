@@ -1,39 +1,38 @@
 import streamlit as st
-from datetime import time, datetime
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
 
-st.header('st.slider')
+df = pd.read_parquet("/home/sebastian/estudio/datasets/mercado_central_flat.parquet")
 
-# Example 1
+st.header('Fruits and vegetables price evolution')
 
-st.subheader('Slider')
+productos_dict= pd.read_csv("/home/sebastian/estudio/datasets/productos.csv")
+prod_options = productos_dict.columns[4:10]
 
-age = st.slider('How old are you?', 0, 130, 25)
-st.write("I'm ", age, 'years old')
+user_prod = st.sidebar.selectbox('Choose an product', prod_options)
+col1, col2, col3 = st.columns(3)
 
-# Example 2
+with col1:
+    if user_prod != '':
+        st.write(f"Product: {user_prod}")
+    else:
+        st.write('👈 Please choose a product!')
 
-st.subheader('Range slider')
+    h_dict = productos_dict[user_prod]
+    data = df[
+        (df.ESP == h_dict[0])&
+        (df.VAR == h_dict[1])&
+        (df.GRADO == h_dict[2])
+        &(df.PROC == h_dict[3])
+        ].reset_index(drop=True)
+    print(len(data))
+    data.sort_values(by=["fecha"], inplace=True)
 
-values = st.slider(
-     'Select a range of values',
-     0.0, 100.0, (25.0, 75.0))
-st.write('Values:', values)
 
-# Example 3
-
-st.subheader('Range time slider')
-
-appointment = st.slider(
-     "Schedule your appointment:",
-     value=(time(11, 30), time(12, 45)))
-st.write("You're scheduled for:", appointment)
-
-# Example 4
-
-st.subheader('Datetime slider')
-
-start_time = st.slider(
-     "When do you start?",
-     value=datetime(2020, 1, 1, 9, 30),
-     format="MM/DD/YY - hh:mm")
-st.write("Start time:", start_time)
+fig, ax = plt.subplots()
+ax.plot(data.fecha, data["MOPK"])
+ax.set_xlabel("Date")  
+ax.set_ylabel("Price Argentinian peso / Kg ")   
+ax.set_title(f"{user_prod} price evolution")  
+st.pyplot(fig)
