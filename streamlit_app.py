@@ -3,11 +3,11 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-df = pd.read_parquet("/home/sebastian/estudio/datasets/mercado_central_flat.parquet")
+df = pd.read_parquet("data/mercado_central_flat.parquet")
 
 st.header('Fruits and vegetables price evolution')
 
-productos_dict= pd.read_csv("/home/sebastian/estudio/datasets/productos.csv")
+productos_dict= pd.read_csv("data/productos.csv")
 prod_options = productos_dict.columns[4:10]
 
 user_prod = st.sidebar.selectbox('Choose an product', prod_options)
