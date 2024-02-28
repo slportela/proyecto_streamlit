@@ -8,7 +8,7 @@ df = pd.read_parquet("data/mercado_central_flat.parquet")
 st.header('Fruits and vegetables price evolution')
 
 productos_dict= pd.read_csv("data/productos.csv")
-prod_options = productos_dict.columns[4:10]
+prod_options = productos_dict.columns[4:20]
 
 user_prod = st.sidebar.selectbox('Choose an product', prod_options)
 col1, col2, col3 = st.columns(3)
